@@ -36,18 +36,7 @@ function displayCurrentSlide() {
     const slideDescription = document.getElementById('slideDescription');
     const slideCounter = document.getElementById('slideCounter');
     
-    // 画像を表示（Safari対応のエラーハンドリング付き）
-    slideImage.onerror = function() {
-        console.warn('画像の読み込みに失敗しました:', slide.imagePath);
-        // フォールバック画像を設定
-        this.src = createFallbackImage(currentSlideIndex + 1);
-        this.onerror = null; // 無限ループを防ぐ
-    };
-    
-    slideImage.onload = function() {
-        console.log('画像が正常に読み込まれました:', slide.imagePath);
-    };
-    
+    // シンプルに画像を表示
     slideImage.src = slide.imagePath;
     slideImage.alt = `スライド ${currentSlideIndex + 1}`;
     
@@ -56,25 +45,6 @@ function displayCurrentSlide() {
     
     // スライド番号を更新
     slideCounter.textContent = `${currentSlideIndex + 1} / ${currentCourse.slides.length}`;
-}
-
-// フォールバック画像を作成（SVG）
-function createFallbackImage(slideNumber) {
-    const svg = `
-        <svg width="400" height="225" viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg">
-            <rect width="400" height="225" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2"/>
-            <circle cx="200" cy="90" r="30" fill="#6c757d"/>
-            <path d="M185 80 L200 95 L215 80" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="150" y="130" width="100" height="8" fill="#dee2e6" rx="4"/>
-            <text x="200" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#6c757d">
-                スライド ${slideNumber}
-            </text>
-            <text x="200" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#adb5bd">
-                画像を読み込み中...
-            </text>
-        </svg>
-    `;
-    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
 // 次のスライドに進む
