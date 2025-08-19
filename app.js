@@ -55,14 +55,16 @@ function createSampleData() {
     
     // 既存データがある場合、Base64データを実際のファイルパスに更新
     if (existingCourses.length > 0) {
+        console.log('既存データを確認中...');
         let needsUpdate = false;
         const updatedCourses = existingCourses.map(course => {
             const updatedCourse = { ...course };
             if (updatedCourse.slides) {
                 updatedCourse.slides = updatedCourse.slides.map(slide => {
-                    // Base64データを実際のファイルパスに置き換え
-                    if (slide.imagePath && slide.imagePath.startsWith('data:image/svg+xml')) {
+                    // Base64データまたはSVGデータを実際のファイルパスに置き換え
+                    if (slide.imagePath && (slide.imagePath.startsWith('data:image/svg+xml') || slide.imagePath.startsWith('data:image/'))) {
                         needsUpdate = true;
+                        console.log(`更新中: ${slide.imagePath.substring(0, 50)}...`);
                         // コースIDに基づいてファイル名を決定
                         if (course.id === 'course_web_basics') {
                             if (slide.id === 'slide1') return { ...slide, imagePath: 'web_basics.jpg' };
@@ -80,7 +82,10 @@ function createSampleData() {
         
         if (needsUpdate) {
             saveCourses(updatedCourses);
-            console.log('既存のサンプルデータを実際の画像ファイルパスに更新しました。');
+            console.log('✓ 既存のサンプルデータを実際の画像ファイルパスに更新しました。');
+            console.log('ページをリロードして変更を確認してください。');
+        } else {
+            console.log('既存データは既に更新済みです。');
         }
         return;
     }
@@ -131,24 +136,8 @@ function handleError(error, userMessage = 'エラーが発生しました') {
     alert(userMessage);
 }
 
-// ファイルサイズを人間が読みやすい形式に変換
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-// 画像ファイルかどうかをチェック
-function isImageFile(file) {
-    return file && file.type && file.type.startsWith('image/');
-}
-
-// 画像の事前読み込みとチェック（Safari対応）
-function preloadImages() {
+// デバッグ用: 画像ファイルの存在確認
+function checkImageFiles() {
     const imageFiles = [
         'web_basics.jpg',
         'html_structure.jpg', 
@@ -156,18 +145,42 @@ function preloadImages() {
         'javascript_basics.jpg'
     ];
     
+    console.log('=== 画像ファイル確認 ===');
     imageFiles.forEach(filename => {
         const img = new Image();
         img.onload = function() {
-            console.log(`画像読み込み成功: ${filename}`);
+            console.log(`✓ ${filename} - OK`);
         };
         img.onerror = function() {
-            console.warn(`画像読み込み失敗: ${filename} - ファイルが存在しないか、パスが間違っています`);
+            console.error(`✗ ${filename} - 読み込み失敗`);
         };
-        // Safari対応: クロスオリジン設定
-        img.crossOrigin = 'anonymous';
         img.src = filename;
     });
+}
+
+// デバッグ用: ディレクトリ構造の表示
+function showDirectoryHelp() {
+    console.log(`
+=== ファイル配置の確認 ===
+以下のように配置してください：
+
+project/
+├── index.html
+├── styles.css  
+├── auth.js
+├── student.js
+├── slideshow.js
+├── admin.js
+├── app.js
+├── web_basics.jpg          ← この画像ファイル
+├── html_structure.jpg      ← この画像ファイル  
+├── css_styling.jpg         ← この画像ファイル
+└── javascript_basics.jpg   ← この画像ファイル
+
+現在のURL: ${window.location.href}
+画像のURL例: ${window.location.origin}${window.location.pathname.replace('index.html', '')}web_basics.jpg
+    `);
+}
 }
 
 // Safari対応の画像読み込み改善
@@ -297,7 +310,22 @@ function enableDebugMode() {
 document.addEventListener('DOMContentLoaded', function() {
     try {
         initializeApp();
-        console.log('eラーニングアプリケーションが正常に起動しました。');
+        
+        // デバッグ情報を表示
+        console.log('=== eラーニングアプリ起動 ===');
+        console.log('利用可能なデバッグコマンド:');
+        console.log('- checkImageFiles(): 画像ファイルの存在確認');
+        console.log('- showDirectoryHelp(): ファイル配置のヘルプ');
+        console.log('- recreateSampleData(): データを強制的に再作成');
+        console.log('- getCourses(): 現在のコースデータを表示');
+        
+        // グローバルに公開
+        window.checkImageFiles = checkImageFiles;
+        window.showDirectoryHelp = showDirectoryHelp;
+        window.recreateSampleData = recreateSampleData;
+        
+        console.log('✓ アプリケーションが正常に起動しました。');
+        
     } catch (error) {
         handleError(error, 'アプリケーションの初期化中にエラーが発生しました。');
     }
