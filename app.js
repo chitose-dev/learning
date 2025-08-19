@@ -53,8 +53,35 @@ function initializeApp() {
 function createSampleData() {
     const existingCourses = getCourses();
     
-    // 既にデータがある場合は何もしない
+    // 既存データがある場合、Base64データを実際のファイルパスに更新
     if (existingCourses.length > 0) {
+        let needsUpdate = false;
+        const updatedCourses = existingCourses.map(course => {
+            const updatedCourse = { ...course };
+            if (updatedCourse.slides) {
+                updatedCourse.slides = updatedCourse.slides.map(slide => {
+                    // Base64データを実際のファイルパスに置き換え
+                    if (slide.imagePath && slide.imagePath.startsWith('data:image/svg+xml')) {
+                        needsUpdate = true;
+                        // コースIDに基づいてファイル名を決定
+                        if (course.id === 'course_web_basics') {
+                            if (slide.id === 'slide1') return { ...slide, imagePath: 'web_basics.jpg' };
+                            if (slide.id === 'slide2') return { ...slide, imagePath: 'html_structure.jpg' };
+                            if (slide.id === 'slide3') return { ...slide, imagePath: 'css_styling.jpg' };
+                        } else if (course.id === 'course_javascript') {
+                            if (slide.id === 'slide1') return { ...slide, imagePath: 'javascript_basics.jpg' };
+                        }
+                    }
+                    return slide;
+                });
+            }
+            return updatedCourse;
+        });
+        
+        if (needsUpdate) {
+            saveCourses(updatedCourses);
+            console.log('既存のサンプルデータを実際の画像ファイルパスに更新しました。');
+        }
         return;
     }
     
