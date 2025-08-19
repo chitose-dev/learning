@@ -58,14 +58,6 @@ function createSampleData() {
         return;
     }
     
-    // サンプル画像（Base64形式）
-    const sampleImages = {
-        web_basics: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjNEY0NkU1Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIj5XZWLplovnmbk8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIj7lhaXplZo8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiBmaWxsPSIjOTNDNUZEIiBmb250LXNpemU9IjE2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiPkhUTUwgLyBDU1MgLyBKYXZhU2NyaXB0PC90ZXh0Pgo8L3N2Zz4K',
-        html_structure: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRTM0RjI2Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIzNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCI+SFRNTDwvdGV4dD4KPHR2eHQgeD0iMjAwIiB5PSIxNjAiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiPuani+mAoOOBruaVsOizog8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiBmaWxsPSIjRkZEREREIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiPuimgee0oOOBqOOCv+OCsOOBrOS9v+OBhOaWuTwvdGV4dD4KPC9zdmc+Cg==',
-        css_styling: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMTU3MkI2Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIzNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCI+Q1NTPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE2MCIgZmlsbD0id2hpdGUiIGZvbnQtc2l6ZT0iMTgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCI+44K544K/44Kk44Or44Gu6Kit5a6a44G+44G+44G+PC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjIwMCIgZmlsbD0iI0NEREVGRiIgZm9udC1zaXplPSIxNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIj7oibLjgIHjg6zjgqTjgqLjgqbjg4jjgIHjg5Xjgqnjg7Pjg4g8L3RleHQ+Cjwvc3ZnPgo=',
-        javascript_basics: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjdERjFFIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTEwIiBmaWxsPSIjMzMzIiBmb250LXNpemU9IjI4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtd2VpZ2h0PSJib2xkIj5KYXZhU2NyaXB0PC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZmlsbD0iIzMzMyIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIj7li5XnmoTmqZ/og73jga7ov73liqA8L3RleHQ+Cjx0ZXh0IHg9IjIwMCIgeT0iMjAwIiBmaWxsPSIjNjY2IiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiPuOCpOODmeODs+ODiOOAgeWkieaVsOOAgeOCquODluOCuOOCp+OCr+ODiDwvdGV4dD4KPC9zdmc+Cg=='
-    };
-    
     const sampleCourses = [
         {
             id: 'course_web_basics',
@@ -73,17 +65,17 @@ function createSampleData() {
             slides: [
                 {
                     id: 'slide1',
-                    imagePath: sampleImages.web_basics,
+                    imagePath: 'web_basics.jpg',
                     description: 'Web開発の基礎について学習します。現代のWebサイトはHTML、CSS、JavaScriptの3つの技術で構成されています。HTMLは文書の構造を、CSSは見た目を、JavaScriptは動的な機能を担当します。'
                 },
                 {
                     id: 'slide2',
-                    imagePath: sampleImages.html_structure,
+                    imagePath: 'html_structure.jpg',
                     description: 'HTMLはHyperText Markup Languageの略で、Webページの構造を定義するマークアップ言語です。タグを使って見出し、段落、リンク、画像などの要素を配置し、文書の骨組みを作ります。'
                 },
                 {
                     id: 'slide3',
-                    imagePath: sampleImages.css_styling,
+                    imagePath: 'css_styling.jpg',
                     description: 'CSSはCascading Style Sheetsの略で、HTMLで作成した要素の見た目を装飾する言語です。色、フォント、レイアウト、アニメーションなどを指定して、美しいWebページを作成できます。'
                 }
             ],
@@ -95,7 +87,7 @@ function createSampleData() {
             slides: [
                 {
                     id: 'slide1',
-                    imagePath: sampleImages.javascript_basics,
+                    imagePath: 'javascript_basics.jpg',
                     description: 'JavaScriptはWebページに動的な機能を追加するプログラミング言語です。ユーザーの操作に応じて画面を変化させたり、データを処理したり、インタラクティブな体験を提供できます。'
                 }
             ],
@@ -146,6 +138,7 @@ function recreateSampleData() {
     if (confirm('既存のデータを削除してサンプルデータを再作成しますか？')) {
         localStorage.removeItem('courses');
         createSampleData();
+        alert('サンプルデータを再作成しました。ページを再読み込みします。');
         location.reload();
     }
 }
