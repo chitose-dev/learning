@@ -137,9 +137,20 @@ function createSlideEditorItem(slide, index) {
     const item = document.createElement('div');
     item.className = 'slide-editor-item';
     
+    // Safari対応のフォールバック画像
+    const fallbackImage = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+        <svg width="120" height="80" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="80" fill="#f8f9fa" stroke="#dee2e6" stroke-width="1"/>
+            <circle cx="60" cy="30" r="12" fill="#6c757d"/>
+            <path d="M50 25 L60 35 L70 25" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <text x="60" y="55" text-anchor="middle" font-family="Arial" font-size="10" fill="#6c757d">画像${index + 1}</text>
+        </svg>
+    `)}`;
+    
     item.innerHTML = `
         <img src="${slide.imagePath}" alt="スライド ${index + 1}" class="slide-preview" 
-             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTIwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik02MCA0MEw3MCA1MEg1MEw2MCA0MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHN2ZyI+'">
+             onerror="this.src='${fallbackImage}'; console.warn('画像読み込み失敗:', '${slide.imagePath}');"
+             onload="console.log('画像読み込み成功:', '${slide.imagePath}');">
         <div class="slide-editor-content">
             <label>説明文:</label>
             <textarea placeholder="スライドの説明を入力してください" 
