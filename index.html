@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eラーニングシステム</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ログイン画面 -->
+    <div id="loginScreen" class="screen">
+        <div class="login-container">
+            <h1>eラーニングシステム</h1>
+            <div class="login-form">
+                <h2>ログイン</h2>
+                <div class="form-group">
+                    <label>ユーザータイプ:</label>
+                    <select id="userType">
+                        <option value="student">受講者</option>
+                        <option value="admin">管理者</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ユーザーID:</label>
+                    <input type="text" id="userId" placeholder="student または admin">
+                </div>
+                <div class="form-group">
+                    <label>パスワード:</label>
+                    <input type="password" id="password" placeholder="password">
+                </div>
+                <button onclick="login()" class="btn-primary">ログイン</button>
+                <div class="demo-info">
+                    <p><strong>デモ用アカウント:</strong></p>
+                    <p>受講者: ID=student, PW=password</p>
+                    <p>管理者: ID=admin, PW=password</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 受講者画面 - 教材選択 -->
+    <div id="studentScreen" class="screen" style="display:none;">
+        <div class="header">
+            <h1>教材選択</h1>
+            <button onclick="logout()" class="btn-secondary">ログアウト</button>
+        </div>
+        <div class="content">
+            <div id="courseList" class="course-grid">
+                <!-- 教材リストが動的に生成される -->
+            </div>
+        </div>
+    </div>
+
+    <!-- スライドショー画面 -->
+    <div id="slideshowScreen" class="screen" style="display:none;">
+        <div class="slideshow-header">
+            <h2 id="courseTitle">教材タイトル</h2>
+            <div class="slideshow-controls">
+                <button onclick="toggleAutoplay()" id="autoplayBtn" class="btn-secondary">自動送り: OFF</button>
+                <button onclick="backToStudentScreen()" class="btn-secondary">教材選択に戻る</button>
+                <button onclick="logout()" class="btn-secondary">ログアウト</button>
+            </div>
+        </div>
+        <div class="slideshow-container">
+            <div class="slide-content">
+                <div class="slide-image">
+                    <img id="currentSlide" src="" alt="スライド画像">
+                </div>
+                <div class="slide-text">
+                    <p id="slideDescription">スライドの説明文がここに表示されます</p>
+                </div>
+            </div>
+            <div class="slide-navigation">
+                <button onclick="previousSlide()" class="nav-btn" id="prevBtn">← 前へ</button>
+                <div class="slide-progress">
+                    <span id="slideCounter">1 / 1</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+                <button onclick="nextSlide()" class="nav-btn" id="nextBtn">次へ →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理者画面 -->
+    <div id="adminScreen" class="screen" style="display:none;">
+        <div class="header">
+            <h1>管理者画面</h1>
+            <button onclick="logout()" class="btn-secondary">ログアウト</button>
+        </div>
+        <div class="admin-content">
+            <div class="admin-section">
+                <h2>新しい教材を作成</h2>
+                <div class="form-group">
+                    <label>教材名:</label>
+                    <input type="text" id="newCourseTitle" placeholder="教材名を入力">
+                </div>
+                <button onclick="createNewCourse()" class="btn-primary">新規作成</button>
+            </div>
+
+            <div class="admin-section">
+                <h2>既存の教材</h2>
+                <div id="adminCourseList">
+                    <!-- 教材リストが動的に生成される -->
+                </div>
+            </div>
+
+            <!-- 教材編集モーダル -->
+            <div id="editModal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="editCourseTitle">教材を編集</h3>
+                        <button onclick="closeEditModal()" class="close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>画像をアップロード:</label>
+                            <input type="file" id="imageUpload" accept="image/*" multiple>
+                            <button onclick="uploadImages()" class="btn-primary">画像を追加</button>
+                        </div>
+                        <div id="slideEditor">
+                            <!-- スライド編集エリアが動的に生成される -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="saveCourse()" class="btn-primary">保存</button>
+                        <button onclick="closeEditModal()" class="btn-secondary">キャンセル</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="student.js"></script>
+    <script src="slideshow.js"></script>
+    <script src="admin.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
