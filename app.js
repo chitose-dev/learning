@@ -1,9 +1,90 @@
-// 共通機能とデータ管理
+// デバッグ用: 画像ファイルの存在確認
+function checkImageFiles() {
+    const imageFiles = [
+        'web_basics.jpg',
+        'html_structure.jpg', 
+        'css_styling.jpg',
+        'javascript_basics.jpg'
+    ];
+    
+    console.log('=== 画像ファイル確認 ===');
+    imageFiles.forEach(filename => {
+        const img = new Image();
+        img.onload = function() {
+            console.log(`✓ ${filename} - OK`);
+        };
+        img.onerror = function() {
+            console.error(`✗ ${filename} - 読み込み失敗`);
+        };
+        img.src = filename;
+    });
+}
+
+// デバッグ用: ディレクトリ構造の表示
+function showDirectoryHelp() {
+    console.log(`
+=== ファイル配置の確認 ===
+以下のように配置してください：
+
+project/
+├── index.html
+├── styles.css  
+├── auth.js
+├── student.js
+├── slideshow.js
+├── admin.js
+├── app.js
+├── web_basics.jpg          ← この画像ファイル
+├── html_structure.jpg      ← この画像ファイル  
+├── css_styling.jpg         ← この画像ファイル
+└── javascript_basics.jpg   ← この画像ファイル
+
+現在のURL: ${window.location.href}
+画像のURL例: ${window.location.origin}${window.location.pathname.replace('index.html', '')}web_basics.jpg
+    `);
+}// 共通機能とデータ管理
 
 // ローカルストレージからコース一覧を取得
 function getCourses() {
     const courses = localStorage.getItem('courses');
     return courses ? JSON.parse(courses) : [];
+}
+
+// 画像の事前読み込みとチェック
+function preloadImages() {
+    const imageFiles = [
+        'web_basics.jpg',
+        'html_structure.jpg', 
+        'css_styling.jpg',
+        'javascript_basics.jpg'
+    ];
+    
+    imageFiles.forEach(filename => {
+        const img = new Image();
+        img.onload = function() {
+            console.log(`画像読み込み成功: ${filename}`);
+        };
+        img.onerror = function() {
+            console.warn(`画像読み込み失敗: ${filename} - ファイルが存在しないか、パスが間違っています`);
+        };
+        img.src = filename;
+    });
+}
+
+// ファイルサイズを人間が読みやすい形式に変換
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// 画像ファイルかどうかをチェック
+function isImageFile(file) {
+    return file && file.type && file.type.startsWith('image/');
 }
 
 // コース一覧をローカルストレージに保存
