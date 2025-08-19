@@ -1,90 +1,9 @@
-// デバッグ用: 画像ファイルの存在確認
-function checkImageFiles() {
-    const imageFiles = [
-        'web_basics.jpg',
-        'html_structure.jpg', 
-        'css_styling.jpg',
-        'javascript_basics.jpg'
-    ];
-    
-    console.log('=== 画像ファイル確認 ===');
-    imageFiles.forEach(filename => {
-        const img = new Image();
-        img.onload = function() {
-            console.log(`✓ ${filename} - OK`);
-        };
-        img.onerror = function() {
-            console.error(`✗ ${filename} - 読み込み失敗`);
-        };
-        img.src = filename;
-    });
-}
-
-// デバッグ用: ディレクトリ構造の表示
-function showDirectoryHelp() {
-    console.log(`
-=== ファイル配置の確認 ===
-以下のように配置してください：
-
-project/
-├── index.html
-├── styles.css  
-├── auth.js
-├── student.js
-├── slideshow.js
-├── admin.js
-├── app.js
-├── web_basics.jpg          ← この画像ファイル
-├── html_structure.jpg      ← この画像ファイル  
-├── css_styling.jpg         ← この画像ファイル
-└── javascript_basics.jpg   ← この画像ファイル
-
-現在のURL: ${window.location.href}
-画像のURL例: ${window.location.origin}${window.location.pathname.replace('index.html', '')}web_basics.jpg
-    `);
-}// 共通機能とデータ管理
+// 共通機能とデータ管理
 
 // ローカルストレージからコース一覧を取得
 function getCourses() {
     const courses = localStorage.getItem('courses');
     return courses ? JSON.parse(courses) : [];
-}
-
-// 画像の事前読み込みとチェック
-function preloadImages() {
-    const imageFiles = [
-        'web_basics.jpg',
-        'html_structure.jpg', 
-        'css_styling.jpg',
-        'javascript_basics.jpg'
-    ];
-    
-    imageFiles.forEach(filename => {
-        const img = new Image();
-        img.onload = function() {
-            console.log(`画像読み込み成功: ${filename}`);
-        };
-        img.onerror = function() {
-            console.warn(`画像読み込み失敗: ${filename} - ファイルが存在しないか、パスが間違っています`);
-        };
-        img.src = filename;
-    });
-}
-
-// ファイルサイズを人間が読みやすい形式に変換
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-// 画像ファイルかどうかをチェック
-function isImageFile(file) {
-    return file && file.type && file.type.startsWith('image/');
 }
 
 // コース一覧をローカルストレージに保存
@@ -116,18 +35,6 @@ function removeCourse(courseId) {
     const courses = getCourses();
     const filteredCourses = courses.filter(course => course.id !== courseId);
     saveCourses(filteredCourses);
-}
-
-// アプリケーション初期化
-function initializeApp() {
-    // デバッグ用: ローカルストレージをクリア（開発時のみ）
-    // localStorage.clear();
-    
-    // サンプルデータの作成
-    createSampleData();
-    
-    // 認証状態の復元
-    restoreUserSession();
 }
 
 // デモ用サンプルデータを作成
@@ -211,10 +118,90 @@ function createSampleData() {
     saveCourses(sampleCourses);
 }
 
+// アプリケーション初期化
+function initializeApp() {
+    // サンプルデータの作成
+    createSampleData();
+    
+    // 認証状態の復元
+    restoreUserSession();
+}
+
 // エラーハンドリング用の共通関数
 function handleError(error, userMessage = 'エラーが発生しました') {
     console.error('Error:', error);
     alert(userMessage);
+}
+
+// ファイルサイズを人間が読みやすい形式に変換
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// 画像ファイルかどうかをチェック
+function isImageFile(file) {
+    return file && file.type && file.type.startsWith('image/');
+}
+
+// Base64データURLかどうかをチェック
+function isDataURL(str) {
+    return str && typeof str === 'string' && str.startsWith('data:');
+}
+
+// デバッグ用: データをクリア
+function clearAllData() {
+    if (confirm('すべてのデータを削除しますか？この操作は取り消せません。')) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+// デバッグ用: サンプルデータを再作成
+function recreateSampleData() {
+    if (confirm('既存のデータを削除してサンプルデータを再作成しますか？')) {
+        localStorage.removeItem('courses');
+        createSampleData();
+        alert('サンプルデータを再作成しました。ページを再読み込みします。');
+        location.reload();
+    }
+}
+
+// データのエクスポート（デバッグ用）
+function exportData() {
+    const data = {
+        courses: getCourses(),
+        currentUser: getCurrentUser()
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = 'elearning_data.json';
+    link.click();
+}
+
+// アプリケーションの状態をチェック
+function checkAppStatus() {
+    const courses = getCourses();
+    const user = getCurrentUser();
+    
+    console.log('=== アプリケーション状態 ===');
+    console.log('教材数:', courses.length);
+    console.log('現在のユーザー:', user ? user.name : 'ログインしていません');
+    console.log('ローカルストレージ使用量:', JSON.stringify(localStorage).length + ' 文字');
+    
+    // コース詳細
+    courses.forEach((course, index) => {
+        console.log(`教材 ${index + 1}: ${course.title} (${course.slides ? course.slides.length : 0} スライド)`);
+    });
 }
 
 // デバッグ用: 画像ファイルの存在確認
@@ -262,130 +249,6 @@ project/
 画像のURL例: ${window.location.origin}${window.location.pathname.replace('index.html', '')}web_basics.jpg
     `);
 }
-}
-
-// Safari対応の画像読み込み改善
-function improveImageLoading() {
-    // 画像の遅延読み込みを無効化（Safari対策）
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        if (img.loading) {
-            img.loading = 'eager';
-        }
-        // Safari対応の設定
-        img.crossOrigin = 'anonymous';
-    });
-}
-
-// Base64データURLかどうかをチェック
-function isDataURL(str) {
-    return str && typeof str === 'string' && str.startsWith('data:');
-}
-
-// デバッグ用: データをクリア
-function clearAllData() {
-    if (confirm('すべてのデータを削除しますか？この操作は取り消せません。')) {
-        localStorage.clear();
-        location.reload();
-    }
-}
-
-// デバッグ用: サンプルデータを再作成
-function recreateSampleData() {
-    if (confirm('既存のデータを削除してサンプルデータを再作成しますか？')) {
-        localStorage.removeItem('courses');
-        createSampleData();
-        alert('サンプルデータを再作成しました。ページを再読み込みします。');
-        location.reload();
-    }
-}
-
-// データのエクスポート（デバッグ用）
-function exportData() {
-    const data = {
-        courses: getCourses(),
-        currentUser: getCurrentUser()
-    };
-    
-    const dataStr = JSON.stringify(data, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(dataBlob);
-    link.download = 'elearning_data.json';
-    link.click();
-}
-
-// データのインポート（デバッグ用）
-function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            
-            if (data.courses) {
-                saveCourses(data.courses);
-            }
-            
-            alert('データを正常にインポートしました。');
-            location.reload();
-            
-        } catch (error) {
-            handleError(error, 'ファイルの形式が正しくありません。');
-        }
-    };
-    reader.readAsText(file);
-}
-
-// アプリケーションの状態をチェック
-function checkAppStatus() {
-    const courses = getCourses();
-    const user = getCurrentUser();
-    
-    console.log('=== アプリケーション状態 ===');
-    console.log('教材数:', courses.length);
-    console.log('現在のユーザー:', user ? user.name : 'ログインしていません');
-    console.log('ローカルストレージ使用量:', JSON.stringify(localStorage).length + ' 文字');
-    
-    // コース詳細
-    courses.forEach((course, index) => {
-        console.log(`教材 ${index + 1}: ${course.title} (${course.slides ? course.slides.length : 0} スライド)`);
-    });
-}
-
-// パフォーマンス監視
-function monitorPerformance() {
-    if (window.performance && window.performance.mark) {
-        window.performance.mark('app-start');
-        
-        window.addEventListener('load', function() {
-            window.performance.mark('app-loaded');
-            window.performance.measure('app-load-time', 'app-start', 'app-loaded');
-            
-            const measure = window.performance.getEntriesByName('app-load-time')[0];
-            console.log('アプリケーション読み込み時間:', Math.round(measure.duration) + 'ms');
-        });
-    }
-}
-
-// デバッグモードの有効化
-function enableDebugMode() {
-    // グローバル関数として公開
-    window.clearAllData = clearAllData;
-    window.recreateSampleData = recreateSampleData;
-    window.exportData = exportData;
-    window.checkAppStatus = checkAppStatus;
-    
-    console.log('=== デバッグモードが有効になりました ===');
-    console.log('使用可能な関数:');
-    console.log('- clearAllData(): すべてのデータを削除');
-    console.log('- recreateSampleData(): サンプルデータを再作成');
-    console.log('- exportData(): データをエクスポート');
-    console.log('- checkAppStatus(): アプリケーション状態を表示');
-}
 
 // アプリケーション開始時の処理
 document.addEventListener('DOMContentLoaded', function() {
@@ -404,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.checkImageFiles = checkImageFiles;
         window.showDirectoryHelp = showDirectoryHelp;
         window.recreateSampleData = recreateSampleData;
+        window.clearAllData = clearAllData;
+        window.checkAppStatus = checkAppStatus;
         
         console.log('✓ アプリケーションが正常に起動しました。');
         
@@ -412,24 +277,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ウィンドウを閉じる前の確認（データ保護）
-window.addEventListener('beforeunload', function(e) {
-    const user = getCurrentUser();
-    if (user && user.type === 'admin') {
-        // 管理者の場合は確認を表示
-        e.preventDefault();
-        e.returnValue = '編集中のデータがある可能性があります。本当にページを離れますか？';
-    }
-});
-
 // エラーハンドリング
 window.addEventListener('error', function(e) {
     console.error('予期しないエラー:', e.error);
     handleError(e.error, 'アプリケーションでエラーが発生しました。ページを再読み込みしてください。');
-});
-
-// 未処理のPromise拒否をキャッチ
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('未処理のPromise拒否:', e.reason);
-    handleError(e.reason, 'データの処理中にエラーが発生しました。');
 });
