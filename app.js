@@ -147,6 +147,42 @@ function isImageFile(file) {
     return file && file.type && file.type.startsWith('image/');
 }
 
+// 画像の事前読み込みとチェック（Safari対応）
+function preloadImages() {
+    const imageFiles = [
+        'web_basics.jpg',
+        'html_structure.jpg', 
+        'css_styling.jpg',
+        'javascript_basics.jpg'
+    ];
+    
+    imageFiles.forEach(filename => {
+        const img = new Image();
+        img.onload = function() {
+            console.log(`画像読み込み成功: ${filename}`);
+        };
+        img.onerror = function() {
+            console.warn(`画像読み込み失敗: ${filename} - ファイルが存在しないか、パスが間違っています`);
+        };
+        // Safari対応: クロスオリジン設定
+        img.crossOrigin = 'anonymous';
+        img.src = filename;
+    });
+}
+
+// Safari対応の画像読み込み改善
+function improveImageLoading() {
+    // 画像の遅延読み込みを無効化（Safari対策）
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (img.loading) {
+            img.loading = 'eager';
+        }
+        // Safari対応の設定
+        img.crossOrigin = 'anonymous';
+    });
+}
+
 // Base64データURLかどうかをチェック
 function isDataURL(str) {
     return str && typeof str === 'string' && str.startsWith('data:');
@@ -262,6 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         monitorPerformance();
         initializeApp();
+        
+        // Safari対応の改善
+        preloadImages();
+        improveImageLoading();
         
         // 開発環境でのみデバッグモードを有効化
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
