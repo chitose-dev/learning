@@ -296,20 +296,8 @@ function enableDebugMode() {
 // アプリケーション開始時の処理
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        monitorPerformance();
         initializeApp();
-        
-        // Safari対応の改善
-        preloadImages();
-        improveImageLoading();
-        
-        // 開発環境でのみデバッグモードを有効化
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            enableDebugMode();
-        }
-        
         console.log('eラーニングアプリケーションが正常に起動しました。');
-        
     } catch (error) {
         handleError(error, 'アプリケーションの初期化中にエラーが発生しました。');
     }
